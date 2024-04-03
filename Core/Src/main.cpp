@@ -18,14 +18,18 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "adc.h"
 #include "can.h"
+#include "lptim.h"
+#include "spi.h"
 #include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "clock.h"
+#include "led.h"
+#include "switches.h"
+#include "spi_adc.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,7 +61,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+AdcVoltages adcVoltages;
 /* USER CODE END 0 */
 
 /**
@@ -90,9 +94,15 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN1_Init();
   MX_TIM2_Init();
-  MX_ADC1_Init();
+  MX_SPI2_Init();
+  MX_TIM1_Init();
+  MX_LPTIM1_Init();
+  MX_LPTIM2_Init();
   /* USER CODE BEGIN 2 */
   clock_init();
+  led_init();
+  switches_init();
+  spiAdc_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -104,6 +114,11 @@ int main(void)
     /* USER CODE BEGIN 3 */
     float deltaTime = clock_getDeltaTime();
     led_rainbow(deltaTime);
+
+    int t = ((int)clock_getTime()) % 5;
+    float pct = t / 4.0f;
+    switches_setBrakeLight(pct*pct);
+
   }
   /* USER CODE END 3 */
 }

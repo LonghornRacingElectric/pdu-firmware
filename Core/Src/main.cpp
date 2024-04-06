@@ -102,7 +102,7 @@ int main(void)
   clock_init();
   led_init();
   switches_init();
-  spiAdc_init();
+//  spiAdc_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -115,9 +115,9 @@ int main(void)
     float deltaTime = clock_getDeltaTime();
     led_rainbow(deltaTime);
 
-    int t = ((int)clock_getTime()) % 5;
-    float pct = t / 4.0f;
-    switches_setBrakeLight(pct*pct);
+//    int t = ((int)clock_getTime()) % 5;
+//    float pct = t / 4.0f;
+//    switches_setBrakeLight(pct*pct);
 
   }
   /* USER CODE END 3 */

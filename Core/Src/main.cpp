@@ -30,6 +30,7 @@
 #include "led.h"
 #include "switches.h"
 #include "spi_adc.h"
+#include "imu.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,6 +63,7 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 AdcVoltages adcVoltages;
+xyz accel;
 /* USER CODE END 0 */
 
 /**
@@ -102,6 +104,7 @@ int main(void)
   clock_init();
   led_init();
   switches_init();
+  imu_init(&hspi2);
 //  spiAdc_init();
   /* USER CODE END 2 */
 
@@ -115,9 +118,11 @@ int main(void)
     float deltaTime = clock_getDeltaTime();
     led_rainbow(deltaTime);
 
-//    int t = ((int)clock_getTime()) % 5;
-//    float pct = t / 4.0f;
-//    switches_setBrakeLight(pct*pct);
+    if(imu_isAccelReady())
+      imu_getAccel(&accel);
+
+    int t = ((int)(clock_getTime() / 0.04f)) % 2;
+    switches_setBrakeLight(t);
 
   }
   /* USER CODE END 3 */

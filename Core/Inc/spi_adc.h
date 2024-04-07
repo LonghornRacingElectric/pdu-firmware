@@ -3,29 +3,30 @@
 
 #include <stdint.h>
 
+#define SPI_TIMEOUT 1000
+
 typedef struct AdcVoltages {
-  float dcBusVoltage;
-  float dcBusCurrent;
+    float dcBusVoltage;
+    float dcBusCurrent;
 
-  float brakeLightCurrent;
-  float glvCurrent;
-  float radiatorFansCurrent;
-  float batteryFansCurrent;
-  float pumpCurrent;
-  float accessoryCurrent;
-  float shutdownCurrent;
+    float brakeLightCurrent;
+    float glvCurrent;
+    float radiatorFansCurrent;
+    float batteryFansCurrent;
+    float pumpCurrent;
+    float accessoryCurrent;
+    float shutdownCurrent;
 
-  float sus1;
-  float sus2;
+    float sus1;
+    float sus2;
 
-  float ambientTemp;
-  float loopTemp1;
-  float loopTemp2;
+    float ambientTemp;
+    float loopTemp1;
+    float loopTemp2;
 
-  float extraAnalog1;
-  float extraAnalog2;
+    float extraAnalog1;
+    float extraAnalog2;
 } AdcVoltages;
-
 
 static void spiAdc_csLow();
 

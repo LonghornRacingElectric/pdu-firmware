@@ -104,6 +104,7 @@ int main(void)
   clock_init();
   led_init();
   switches_init();
+  spiAdc_init();
   imu_init(&hspi2);
 //  spiAdc_init();
   /* USER CODE END 2 */
@@ -123,6 +124,7 @@ int main(void)
 
     switches_setBrakeLight(0.0005f);
 
+    spiAdc_getVoltages(adcVoltages);
   }
   /* USER CODE END 3 */
 }

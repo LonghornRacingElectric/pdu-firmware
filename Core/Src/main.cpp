@@ -121,8 +121,7 @@ int main(void)
     if(imu_isAccelReady())
       imu_getAccel(&accel);
 
-    int t = ((int)(clock_getTime() / 0.04f)) % 2;
-    switches_setBrakeLight(t);
+    switches_setBrakeLight(0.0005f);
 
   }
   /* USER CODE END 3 */

@@ -15,42 +15,53 @@ static void spiAdc_csHigh() {
 }
 
 static void spiAdc_write(uint8_t *bufferAddr, uint16_t size) {
+    hspi2.Instance->CR1 ^= SPI_CR1_CPHA_Msk;
     spiAdc_csLow();
     HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, bufferAddr, size, SPI_TIMEOUT);
     if(status != HAL_OK)
         Error_Handler();
     spiAdc_csHigh();
+    hspi2.Instance->CR1 ^= SPI_CR1_CPHA_Msk;
 }
 
 static void spiAdc_read(uint8_t *bufferAddr, uint16_t size) {
+    hspi2.Instance->CR1 ^= SPI_CR1_CPHA_Msk;
     spiAdc_csLow();
     HAL_StatusTypeDef status = HAL_SPI_Receive(&hspi2, bufferAddr, size, SPI_TIMEOUT);
     if(status != HAL_OK)
         Error_Handler();
     spiAdc_csHigh();
+    hspi2.Instance->CR1 ^= SPI_CR1_CPHA_Msk;
 }
 
 static void spiAdc_writeDummyData() {
+    hspi2.Instance->CR1 ^= SPI_CR1_CPHA_Msk;
     spiAdc_csLow();
-    HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, dummyData, 1, SPI_TIMEOUT);
+    HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, dummyData, 2, SPI_TIMEOUT);
     if(status != HAL_OK)
         Error_Handler();
     spiAdc_csHigh();
+    hspi2.Instance->CR1 ^= SPI_CR1_CPHA_Msk;
 }
 
 static float spiAdc_convert(uint8_t channel) {
     buffer[0] = 0b10000011 | (channel << 2);
-    buffer[1] = 0b00010000;
+    buffer[1] = 0b0010 << 4;
 
-    spiAdc_write(&buffer[0], 1);
-    spiAdc_read(&buffer[channel*2], 1);
+    spiAdc_write(buffer, 2);
+    spiAdc_read(buffer, 2);
 
-    uint16_t x = ((uint16_t)(buffer[channel*2]) << 8) & 0xFF00 | (uint16_t)(buffer[channel*2+1]);
+    uint16_t x = ((buffer[0] & 0x0F) << 8) | buffer[1];
     return static_cast<float>(x) / 4095.0f * 3.3f;
 }
 
 void spiAdc_init() {
-    HAL_Delay(200);
+    spiAdc_writeDummyData();
+    spiAdc_writeDummyData();
+    spiAdc_writeDummyData();
+    spiAdc_writeDummyData();
+    spiAdc_writeDummyData();
+    spiAdc_writeDummyData();
     spiAdc_writeDummyData();
     spiAdc_writeDummyData();
 }

@@ -4,7 +4,7 @@
 #include "spi.h"
 
 static uint8_t buffer[32];
-static uint8_t dummyData = 0xFF;
+static uint8_t dummyData[2] = {0xFF, 0xFF};
 
 static void spiAdc_csLow() {
     HAL_GPIO_WritePin(SPI_CS_ADC_GPIO_Port, SPI_CS_ADC_Pin, GPIO_PIN_RESET);
@@ -14,7 +14,7 @@ static void spiAdc_csHigh() {
     HAL_GPIO_WritePin(SPI_CS_ADC_GPIO_Port, SPI_CS_ADC_Pin, GPIO_PIN_SET);
 }
 
-static void spiAdc_write(uint8_t *bufferAddr, uint8_t size) {
+static void spiAdc_write(uint8_t *bufferAddr, uint16_t size) {
     spiAdc_csLow();
     HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, bufferAddr, size, SPI_TIMEOUT);
     if(status != HAL_OK)
@@ -22,7 +22,7 @@ static void spiAdc_write(uint8_t *bufferAddr, uint8_t size) {
     spiAdc_csHigh();
 }
 
-static void spiAdc_read(uint8_t *bufferAddr, uint8_t size) {
+static void spiAdc_read(uint8_t *bufferAddr, uint16_t size) {
     spiAdc_csLow();
     HAL_StatusTypeDef status = HAL_SPI_Receive(&hspi2, bufferAddr, size, SPI_TIMEOUT);
     if(status != HAL_OK)
@@ -32,7 +32,7 @@ static void spiAdc_read(uint8_t *bufferAddr, uint8_t size) {
 
 static void spiAdc_writeDummyData() {
     spiAdc_csLow();
-    HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, &dummyData, 1, SPI_TIMEOUT);
+    HAL_StatusTypeDef status = HAL_SPI_Transmit(&hspi2, dummyData, 1, SPI_TIMEOUT);
     if(status != HAL_OK)
         Error_Handler();
     spiAdc_csHigh();
@@ -42,11 +42,11 @@ static float spiAdc_convert(uint8_t channel) {
     buffer[0] = 0b10000011 | (channel << 2);
     buffer[1] = 0b00010000;
 
-    spiAdc_write(&buffer[0], 2);
-    spiAdc_read(&buffer[channel*2], 2);
+    spiAdc_write(&buffer[0], 1);
+    spiAdc_read(&buffer[channel*2], 1);
 
-    uint8_t x = ((buffer[channel*2] << 4) & 0xF0) | ((buffer[channel*2+1] >> 4) & 0x0F);
-    return static_cast<float>(x) / 255.0f * 3.3f;
+    uint16_t x = ((uint16_t)(buffer[channel*2]) << 8) & 0xFF00 | (uint16_t)(buffer[channel*2+1]);
+    return static_cast<float>(x) / 4095.0f * 3.3f;
 }
 
 void spiAdc_init() {

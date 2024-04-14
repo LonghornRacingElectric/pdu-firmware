@@ -2,6 +2,7 @@
 #define PDU_FIRMWARE_VCU_H
 
 #include "spi_adc.h"
+#include "tach.h"
 
 typedef struct VCUStatus {
     float brakeLightPercent;
@@ -13,7 +14,7 @@ typedef struct VCUStatus {
 } VCUStatus ;
 
 void vcu_init();
-void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus& stat);
+void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus& stat, TachData &tach);
 
 
 #endif //PDU_FIRMWARE_VCU_H

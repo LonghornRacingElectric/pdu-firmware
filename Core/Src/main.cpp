@@ -117,7 +117,7 @@ int main(void)
 
 
   VCUStatus stat = VCUStatus();
-  TachData tachData = TachData();
+  TachData tachData;
 
 //  spiAdc_init();
   /* USER CODE END 2 */
@@ -159,7 +159,7 @@ int main(void)
     tach_periodic(deltaTime, tachData);
 
     spiAdc_getVoltages(adcVoltages);
-    vcu_periodic(adcVoltages, stat);
+    vcu_periodic(adcVoltages, stat, tachData);
 
       switches_setBrakeLight(stat.brakeLightPercent);
       switches_setBuzzer(stat.buzzerType);

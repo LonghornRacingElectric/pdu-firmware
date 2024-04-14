@@ -33,7 +33,7 @@ void vcu_init() {
     can_addOutbox(PDU_VCU_STATUS, 0.1f, &pduStatus);
 }
 
-void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat) {
+void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat, TachData& tachData) {
     can_writeFloat(uint16_t, &pduCurrents1, 0, adcVoltages.dcBusCurrent, 0.01f);
     can_writeFloat(uint16_t, &pduCurrents1, 2, adcVoltages.radiatorFansCurrent, 1.0f);
     can_writeFloat(uint16_t, &pduCurrents1, 4, adcVoltages.batteryFansCurrent, 1.0f);
@@ -52,8 +52,16 @@ void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat) {
     can_writeFloat(int16_t, &imuGyro, 4, gyroData.z, 0.01f);
 
     // Thermals, LV Battery
-    // TODO implement
-    can_writeFloat(uint8_t, &pduThermals, 0, 0, 0);
+    // TODO: LV Battery
+    can_writeFloat(uint8_t, &pduThermals, 0, tachData.flowRate, 0.1f);
+    can_writeInt(int8_t, &pduThermals, 1, adcVoltages.ambientTemp); // TODO: THERMISTOR VOLTAGE TO TEMP
+    can_writeInt(int8_t, &pduThermals, 2, adcVoltages.loopTemp1);
+    can_writeInt(int8_t, &pduThermals, 3, adcVoltages.loopTemp2);
+    can_writeInt(uint16_t, &pduThermals, 4, tachData.radiatorFansRPM);
+
+    can_writeFloat(int16_t , &lvBattery, 0, adcVoltages.dcBusVoltage, 0.01f);
+    can_writeFloat(int16_t , &lvBattery, 2, 0, 0.01f);
+    can_writeFloat(int16_t, &lvBattery, 4, adcVoltages.glvCurrent, 0.01f);
 
 
     // Check VCU->PDU Inboxes

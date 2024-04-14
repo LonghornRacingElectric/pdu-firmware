@@ -113,19 +113,14 @@ int main(void)
   tach_init();
   pwm_init();
 
-
-  // Turn on accessory, we'll just unplug the fuse if we want it off
-  switches_setAccessory(1.0f);
-
-
   VCUStatus stat = VCUStatus();
   TachData tachData;
 
-  switches_setAccessory(0);
-  switches_setRadiatorFans(1);
-  switches_setBatteryFans(1);
-  switches_setGLV(1);
-  switches_setShutdown(1);
+  switches_setAccessory(1.0f);
+  switches_setRadiatorFans(true);
+  switches_setBatteryFans(true);
+  switches_setGLV(true);
+  switches_setShutdown(true);
   /* USER CODE END 2 */
 
   /* Infinite loop */

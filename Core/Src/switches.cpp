@@ -36,3 +36,7 @@ void switches_setGLV(bool on) {
 void switches_setShutdown(bool on) {
     HAL_GPIO_WritePin(SW_SHDN_GPIO_Port, SW_SHDN_Pin, (GPIO_PinState) on);
 }
+
+void switches_setBuzzer(bool on) {
+    HAL_GPIO_WritePin(RTD_Enable_GPIO_Port, RTD_Enable_Pin, (GPIO_PinState) on);
+}

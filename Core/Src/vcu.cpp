@@ -3,6 +3,7 @@
 #include "angel_can_ids.h"
 #include "imu.h"
 #include "clock.h"
+#include "calculations.h"
 
 static CanInbox pduParams;
 static CanInbox pduBrakeLight;
@@ -17,6 +18,10 @@ static CanOutbox pduCurrents2;
 static CanOutbox pduStatus;
 
 int cycles = 0;
+
+//#define LOOP_TEMP(adc) (1.0f/25.0f) + (1.0f/3977.0f) * log((3.3/adc)-1)
+//#define CURRENT(adcCurrent) ((adcCurrent-(3.3/2)) / 0.066)
+//#define VOLTAGE(adcVoltage) adcVoltage * (112.0f/12.0f)
 
 void vcu_init() {
     can_addInbox(VCU_PDU_PARAMS, &pduParams);
@@ -54,20 +59,28 @@ void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat, TachData& tachData)
     // Thermals, LV Battery
     // TODO: LV Battery
     can_writeFloat(uint8_t, &pduThermals, 0, tachData.flowRate, 0.1f);
+
+    float loopTemp1 = calculations::getTempFromLoop(adcVoltages.loopTemp1);
+    float loopTemp2 = calculations::getTempFromLoop(adcVoltages.loopTemp2);
+
     can_writeInt(int8_t, &pduThermals, 1, adcVoltages.ambientTemp); // TODO: THERMISTOR VOLTAGE TO TEMP
-    can_writeInt(int8_t, &pduThermals, 2, adcVoltages.loopTemp1);
-    can_writeInt(int8_t, &pduThermals, 3, adcVoltages.loopTemp2);
+    can_writeInt(int8_t, &pduThermals, 2, loopTemp1);
+    can_writeInt(int8_t, &pduThermals, 3, loopTemp2);
     can_writeInt(uint16_t, &pduThermals, 4, tachData.radiatorFansRPM);
 
-    can_writeFloat(int16_t , &lvBattery, 0, adcVoltages.dcBusVoltage, 0.01f);
+    can_writeFloat(int16_t , &lvBattery, 0, calculations::getVoltageFromADC(adcVoltages.dcBusVoltage), 0.01f);
     can_writeFloat(int16_t , &lvBattery, 2, 0, 0.01f);
-    can_writeFloat(int16_t, &lvBattery, 4, adcVoltages.glvCurrent, 0.01f);
+
+    float current = calculations::getCurrentFromADC(adcVoltages.glvCurrent);
+    can_writeFloat(int16_t, &lvBattery, 4, current, 0.01f);
 
 
     // Check VCU->PDU Inboxes
     // TODO implement
     if(pduBrakeLight.isRecent) {
         stat.brakeLightPercent = can_readFloat(uint8_t, &pduBrakeLight, 0, 0.01f);
+
+        // pulsating
 //        stat.brakeLightPercent = ((float) ((int) clock_getTime() % 5)) / 5;
         pduBrakeLight.isRecent = false;
     }
@@ -81,6 +94,7 @@ void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat, TachData& tachData)
 
     if(pduBuzzer.isRecent) {
         stat.buzzerType = can_readInt(uint8_t, &pduBuzzer, 0);
+
         pduBuzzer.isRecent = false;
     }
 

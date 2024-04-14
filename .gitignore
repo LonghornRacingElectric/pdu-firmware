@@ -126,3 +126,7 @@ fabric.properties
 .idea/*
 Debug/
 *.DS_Store
+
+# vs code build
+build/
+/.cache

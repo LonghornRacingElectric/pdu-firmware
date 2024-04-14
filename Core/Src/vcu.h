@@ -6,7 +6,7 @@
 typedef struct VCUStatus {
     float brakeLightPercent;
     struct pduCooling {
-        float radiatorFanRPM;
+        float radiatorFanPercent;
         float pumpPercent;
     } pduCooling;
     uint8_t buzzerType;

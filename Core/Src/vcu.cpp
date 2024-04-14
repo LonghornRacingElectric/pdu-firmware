@@ -53,17 +53,19 @@ void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat) {
 
     // Thermals, LV Battery
     // TODO implement
+    can_writeFloat(uint8_t, &pduThermals, 0, 0, 0);
+
 
     // Check VCU->PDU Inboxes
     // TODO implement
-    if(pduBrakeLight.isRecent || 1) {
+    if(pduBrakeLight.isRecent) {
         stat.brakeLightPercent = can_readFloat(uint8_t, &pduBrakeLight, 0, 0.01f);
-        stat.brakeLightPercent = ((float) ((int) clock_getTime() % 5)) / 5;
+//        stat.brakeLightPercent = ((float) ((int) clock_getTime() % 5)) / 5;
         pduBrakeLight.isRecent = false;
     }
 
     if(pduCooling.isRecent) {
-        stat.pduCooling.radiatorFanRPM = can_readFloat(uint8_t, &pduCooling, 0, 0.01f);
+        stat.pduCooling.radiatorFanPercent = can_readFloat(uint8_t, &pduCooling, 0, 0.01f);
         stat.pduCooling.pumpPercent = can_readFloat(uint8_t, &pduCooling, 1, 0.01f);
 
         pduCooling.isRecent = false;

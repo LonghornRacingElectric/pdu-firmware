@@ -109,6 +109,11 @@ int main(void)
   imu_init(&hspi2);
   vcu_init();
 
+
+  // Turn on accessory, we'll just unplug the fuse if we want it off
+  switches_setAccessory(1.0f);
+
+
   VCUStatus stat = VCUStatus();
 //  spiAdc_init();
   /* USER CODE END 2 */
@@ -153,7 +158,9 @@ int main(void)
     vcu_periodic(adcVoltages, stat);
 
       switches_setBrakeLight(stat.brakeLightPercent);
-
+      switches_setBuzzer(stat.buzzerType);
+      switches_setRadiatorFans(stat.pduCooling.radiatorFanPercent);
+      switches_setPump(stat.pduCooling.pumpPercent);
   }
   /* USER CODE END 3 */
 }

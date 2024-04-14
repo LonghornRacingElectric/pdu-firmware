@@ -108,6 +108,8 @@ int main(void)
   spiAdc_init();
   imu_init(&hspi2);
   vcu_init();
+
+  VCUStatus stat = VCUStatus();
 //  spiAdc_init();
   /* USER CODE END 2 */
 
@@ -127,26 +129,31 @@ int main(void)
     if(imu_isAccelReady())
       imu_getAccel(&accel);
 
-    float tau = 0.1f;
-    float alpha = deltaTime / (deltaTime + tau);
-    accumulator = (1.0f - alpha) * accumulator + alpha * accel.x;
-    hardBraking = accel.x > 8.0f || accel.x < -8.0f;
-    bool braking = accel.x > 5.0f || accel.x < -5.0f;
-    float pct = 0.5f;
+//    float tau = 0.1f;
+//    float alpha = deltaTime / (deltaTime + tau);
+//    accumulator = (1.0f - alpha) * accumulator + alpha * accel.x;
+//    hardBraking = accel.x > 8.0f || accel.x < -8.0f;
+//    bool braking = accel.x > 5.0f || accel.x < -5.0f;
+//    float pct = 0.5f;
+//
+//    if(hardBraking) {
+//        bool pattern = (brakeTimer > 0.5f) || (static_cast<uint32_t>(brakeTimer / 0.05f) % 2 == 0);
+//        switches_setBrakeLight(pattern * pct);
+//        brakeTimer += deltaTime;
+//    } else if(braking) {
+//        switches_setBrakeLight(pct);
+//    } else {
+//        switches_setBrakeLight(0.0005f);
+//        brakeTimer = 0;
+//    }
 
-    if(hardBraking) {
-        bool pattern = (brakeTimer > 0.5f) || (static_cast<uint32_t>(brakeTimer / 0.05f) % 2 == 0);
-        switches_setBrakeLight(pattern * pct);
-        brakeTimer += deltaTime;
-    } else if(braking) {
-        switches_setBrakeLight(pct);
-    } else {
-        switches_setBrakeLight(0.0005f);
-        brakeTimer = 0;
-    }
+
 
     spiAdc_getVoltages(adcVoltages);
-    vcu_periodic(adcVoltages);
+    vcu_periodic(adcVoltages, stat);
+
+      switches_setBrakeLight(stat.brakeLightPercent);
+
   }
   /* USER CODE END 3 */
 }

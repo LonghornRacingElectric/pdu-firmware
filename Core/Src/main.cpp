@@ -31,6 +31,7 @@
 #include "switches.h"
 #include "spi_adc.h"
 #include "imu.h"
+#include "tach.h"
 #include "vcu.h"
 /* USER CODE END Includes */
 
@@ -108,6 +109,7 @@ int main(void)
   spiAdc_init();
   imu_init(&hspi2);
   vcu_init();
+  tach_init();
 
 
   // Turn on accessory, we'll just unplug the fuse if we want it off
@@ -115,6 +117,8 @@ int main(void)
 
 
   VCUStatus stat = VCUStatus();
+  TachData tachData = TachData();
+
 //  spiAdc_init();
   /* USER CODE END 2 */
 
@@ -152,7 +156,7 @@ int main(void)
 //        brakeTimer = 0;
 //    }
 
-
+    tach_periodic(deltaTime, tachData);
 
     spiAdc_getVoltages(adcVoltages);
     vcu_periodic(adcVoltages, stat);

@@ -2,6 +2,7 @@
 #include "angel_can.h"
 #include "angel_can_ids.h"
 #include "imu.h"
+#include "clock.h"
 
 static CanInbox pduParams;
 static CanInbox pduBrakeLight;
@@ -14,6 +15,8 @@ static CanOutbox lvBattery;
 static CanOutbox pduCurrents1;
 static CanOutbox pduCurrents2;
 static CanOutbox pduStatus;
+
+int cycles = 0;
 
 void vcu_init() {
     can_addInbox(VCU_PDU_PARAMS, &pduParams);
@@ -30,7 +33,7 @@ void vcu_init() {
     can_addOutbox(PDU_VCU_STATUS, 0.1f, &pduStatus);
 }
 
-void vcu_periodic(AdcVoltages& adcVoltages) {
+void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat) {
     can_writeFloat(uint16_t, &pduCurrents1, 0, adcVoltages.dcBusCurrent, 0.01f);
     can_writeFloat(uint16_t, &pduCurrents1, 2, adcVoltages.radiatorFansCurrent, 1.0f);
     can_writeFloat(uint16_t, &pduCurrents1, 4, adcVoltages.batteryFansCurrent, 1.0f);
@@ -53,4 +56,23 @@ void vcu_periodic(AdcVoltages& adcVoltages) {
 
     // Check VCU->PDU Inboxes
     // TODO implement
+    if(pduBrakeLight.isRecent || 1) {
+        stat.brakeLightPercent = can_readFloat(uint8_t, &pduBrakeLight, 0, 0.01f);
+        stat.brakeLightPercent = ((float) ((int) clock_getTime() % 5)) / 5;
+        pduBrakeLight.isRecent = false;
+    }
+
+    if(pduCooling.isRecent) {
+        stat.pduCooling.radiatorFanRPM = can_readFloat(uint8_t, &pduCooling, 0, 0.01f);
+        stat.pduCooling.pumpPercent = can_readFloat(uint8_t, &pduCooling, 1, 0.01f);
+
+        pduCooling.isRecent = false;
+    }
+
+    if(pduBuzzer.isRecent) {
+        stat.buzzerType = can_readInt(uint8_t, &pduBuzzer, 0);
+        pduBuzzer.isRecent = false;
+    }
+
+    cycles++;
 }

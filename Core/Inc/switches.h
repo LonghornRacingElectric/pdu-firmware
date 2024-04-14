@@ -6,7 +6,7 @@ void switches_init();
 void switches_setBrakeLight(float f);
 void switches_setPump(float f);
 void switches_setAccessory(float f);
-void switches_setRadiatorFans(float f);
+void switches_setRadiatorFans(bool on);
 void switches_setBatteryFans(bool on);
 void switches_setGLV(bool on);
 void switches_setShutdown(bool on);

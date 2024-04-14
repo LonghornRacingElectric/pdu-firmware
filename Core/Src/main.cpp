@@ -32,6 +32,7 @@
 #include "spi_adc.h"
 #include "imu.h"
 #include "tach.h"
+#include "pwm.h"
 #include "vcu.h"
 /* USER CODE END Includes */
 
@@ -110,16 +111,16 @@ int main(void)
   imu_init(&hspi2);
   vcu_init();
   tach_init();
-
-
-  // Turn on accessory, we'll just unplug the fuse if we want it off
-  switches_setAccessory(1.0f);
-
+  pwm_init();
 
   VCUStatus stat = VCUStatus();
   TachData tachData;
 
-//  spiAdc_init();
+  switches_setAccessory(1.0f);
+  switches_setRadiatorFans(true);
+  switches_setBatteryFans(true);
+  switches_setGLV(true);
+  switches_setShutdown(true);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -163,7 +164,7 @@ int main(void)
 
       switches_setBrakeLight(stat.brakeLightPercent);
       switches_setBuzzer(stat.buzzerType);
-      switches_setRadiatorFans(stat.pduCooling.radiatorFanPercent);
+      pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
       switches_setPump(stat.pduCooling.pumpPercent);
   }
   /* USER CODE END 3 */

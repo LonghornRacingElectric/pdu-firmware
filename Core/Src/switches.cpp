@@ -6,7 +6,7 @@ void switches_init() {
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+
 }
 
 void switches_setBrakeLight(float f) {
@@ -21,8 +21,8 @@ void switches_setAccessory(float f) {
     TIM1->CCR2 = (int)(f * 10000);
 }
 
-void switches_setRadiatorFans(float f) {
-    TIM1->CCR4 = (int)(f * 10000);
+void switches_setRadiatorFans(bool on) {
+  HAL_GPIO_WritePin(SW_RadFan_GPIO_Port, SW_RadFan_Pin, (GPIO_PinState) on);
 }
 
 void switches_setBatteryFans(bool on) {

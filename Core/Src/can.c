@@ -54,7 +54,7 @@ void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-
+  HAL_GPIO_WritePin(CAN_Term_GPIO_Port, CAN_Term_Pin, GPIO_PIN_SET);
   /* USER CODE END CAN1_Init 2 */
 
 }

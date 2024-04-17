@@ -110,7 +110,6 @@ int main(void)
   spiAdc_init();
   imu_init(&hspi2);
   vcu_init();
-  tach_init();
   pwm_init();
 
   VCUStatus stat = VCUStatus();
@@ -121,6 +120,9 @@ int main(void)
   switches_setBatteryFans(true);
   switches_setGLV(true);
   switches_setShutdown(true);
+
+  // so VCU can power on
+  tach_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -138,6 +140,8 @@ int main(void)
 
     if(imu_isAccelReady())
       imu_getAccel(&accel);
+
+    tach_periodic(deltaTime, tachData);
 
 //    float tau = 0.1f;
 //    float alpha = deltaTime / (deltaTime + tau);
@@ -157,15 +161,14 @@ int main(void)
 //        brakeTimer = 0;
 //    }
 
-    tach_periodic(deltaTime, tachData);
 
     spiAdc_getVoltages(adcVoltages);
     vcu_periodic(adcVoltages, stat, tachData);
 
-      switches_setBrakeLight(stat.brakeLightPercent);
-      switches_setBuzzer(stat.buzzerType);
-      pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
-      switches_setPump(stat.pduCooling.pumpPercent);
+    switches_setBrakeLight(stat.brakeLightPercent);
+    switches_setBuzzer(stat.buzzerType);
+    pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
+    switches_setPump(stat.pduCooling.pumpPercent);
   }
   /* USER CODE END 3 */
 }

@@ -1,5 +1,6 @@
 #include "tach.h"
 #include "lptim.h"
+#include "clock.h"
 
 #define COUNT_MAX 0xFFFF
 
@@ -8,10 +9,10 @@ void tach_init() {
   HAL_LPTIM_Init(&hlptim2);
 
   volatile int error = HAL_LPTIM_Counter_Start(&hlptim1, COUNT_MAX);
+
+//  HAL_LPTIM_Counter_Start(&hlptim2, COUNT_MAX);
   HAL_LPTIM_Counter_Start(&hlptim2, COUNT_MAX);
   error++;
-
-
 }
 
 static uint32_t countRadiatorFan = 0;
@@ -23,7 +24,7 @@ uint16_t readRadiatorFans(float deltaTime){
   float freq = 0.0f; // rotations per second
   if(count != 0){
       freq = count / deltaTime;
-      // hlptim1.Instance->CNT = 0;
+       hlptim1.Instance->CNT = 0;
   }
   return (uint16_t) (freq * 600); // convert to rotations per minute
 }
@@ -43,6 +44,7 @@ void tach_periodic(float deltaTime, TachData& data){
     if(accumTime < 0.1f){
         return;
     }
+
   data.radiatorFansRPM = readRadiatorFans(accumTime);
   data.flowRate = readFlowRate(accumTime);
   accumTime = 0;

@@ -47,14 +47,18 @@ void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat, TachData& tachData)
     can_writeFloat(uint16_t, &pduCurrents2, 2, adcVoltages.glvCurrent, 1.0f);
     can_writeFloat(uint16_t, &pduCurrents2, 4, adcVoltages.shutdownCurrent, 1.0f);
     can_writeFloat(uint16_t, &pduCurrents2, 6, adcVoltages.brakeLightCurrent, 1.0f);
+    pduCurrents1.dlc = 8;
+    pduCurrents2.dlc = 8;
 
     can_writeFloat(int16_t, &imuAccel, 0, accelData.x, 0.01f);
     can_writeFloat(int16_t, &imuAccel, 2, accelData.y, 0.01f);
     can_writeFloat(int16_t, &imuAccel, 4, accelData.z, 0.01f);
+    imuAccel.dlc = 6;
 
     can_writeFloat(int16_t, &imuGyro, 0, gyroData.x, 0.01f);
     can_writeFloat(int16_t, &imuGyro, 2, gyroData.y, 0.01f);
     can_writeFloat(int16_t, &imuGyro, 4, gyroData.z, 0.01f);
+    imuGyro.dlc = 6;
 
     // Thermals, LV Battery
     // TODO: LV Battery
@@ -67,12 +71,14 @@ void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat, TachData& tachData)
     can_writeInt(int8_t, &pduThermals, 2, loopTemp1);
     can_writeInt(int8_t, &pduThermals, 3, loopTemp2);
     can_writeInt(uint16_t, &pduThermals, 4, tachData.radiatorFansRPM);
+    pduThermals.dlc = 6;
 
     can_writeFloat(int16_t , &lvBattery, 0, calculations::getVoltageFromADC(adcVoltages.dcBusVoltage), 0.01f);
     can_writeFloat(int16_t , &lvBattery, 2, 0, 0.01f);
 
     float current = calculations::getCurrentFromADC(adcVoltages.glvCurrent);
     can_writeFloat(int16_t, &lvBattery, 4, current, 0.01f);
+    lvBattery.dlc = 6;
 
 
     // Check VCU->PDU Inboxes

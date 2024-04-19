@@ -143,26 +143,26 @@ int main(void)
 
     tach_periodic(deltaTime, tachData);
 
-//    float tau = 0.1f;
-//    float alpha = deltaTime / (deltaTime + tau);
-//    accumulator = (1.0f - alpha) * accumulator + alpha * accel.x;
-//    hardBraking = accel.x > 8.0f || accel.x < -8.0f;
-//    bool braking = accel.x > 5.0f || accel.x < -5.0f;
-//    float pct = 0.5f;
-//
-//    if(hardBraking) {
-//        bool pattern = (brakeTimer > 0.5f) || (static_cast<uint32_t>(brakeTimer / 0.05f) % 2 == 0);
-//        switches_setBrakeLight(pattern * pct);
-//        brakeTimer += deltaTime;
-//    } else if(braking) {
-//        switches_setBrakeLight(pct);
-//    } else {
-//        switches_setBrakeLight(0.0005f);
-//        brakeTimer = 0;
-//    }
+    float tau = 0.1f;
+    float alpha = deltaTime / (deltaTime + tau);
+    accumulator = (1.0f - alpha) * accumulator + alpha * accel.x;
+    hardBraking = accel.x > 8.0f || accel.x < -8.0f;
+    bool braking = accel.x > 5.0f || accel.x < -5.0f;
+    float pct = 0.5f;
+
+    if(hardBraking) {
+        bool pattern = (brakeTimer > 0.5f) || (static_cast<uint32_t>(brakeTimer / 0.05f) % 2 == 0);
+        switches_setBrakeLight(pattern * pct);
+        brakeTimer += deltaTime;
+    } else if(braking) {
+        switches_setBrakeLight(pct);
+    } else {
+        switches_setBrakeLight(0.0005f);
+        brakeTimer = 0;
+    }
 
 
-    spiAdc_getVoltages(adcVoltages);
+//    spiAdc_getVoltages(adcVoltages); // TODO ADC doesn't work
     vcu_periodic(adcVoltages, stat, tachData);
 
     switches_setBrakeLight(stat.brakeLightPercent);

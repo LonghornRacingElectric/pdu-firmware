@@ -91,9 +91,11 @@ void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat, TachData& tachData)
         pduBrakeLight.isRecent = false;
     }
 
-    if(pduCooling.isRecent) {
+    if(pduCooling.isRecent || 1) {
         stat.pduCooling.radiatorFanPercent = can_readFloat(uint8_t, &pduCooling, 0, 0.01f);
         stat.pduCooling.pumpPercent = can_readFloat(uint8_t, &pduCooling, 1, 0.01f);
+
+        stat.pduCooling.radiatorFanPercent = ((float) ((int) clock_getTime() % 10)) / 10;
 
         pduCooling.isRecent = false;
     }

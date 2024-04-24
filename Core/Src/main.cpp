@@ -18,9 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "can.h"
-#include "lptim.h"
-#include "spi.h"
 #include "tim.h"
 #include "gpio.h"
 
@@ -29,11 +26,9 @@
 #include "clock.h"
 #include "led.h"
 #include "switches.h"
-#include "spi_adc.h"
-#include "imu.h"
-#include "tach.h"
 #include "pwm.h"
-#include "vcu.h"
+
+#include <cmath>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,8 +60,8 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-AdcVoltages adcVoltages;
-xyz accel;
+//AdcVoltages adcVoltages;
+//xyz accel;
 /* USER CODE END 0 */
 
 /**
@@ -97,39 +92,42 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_CAN1_Init();
   MX_TIM2_Init();
-  MX_SPI2_Init();
   MX_TIM1_Init();
-  MX_LPTIM1_Init();
-  MX_LPTIM2_Init();
   /* USER CODE BEGIN 2 */
   clock_init();
   led_init();
   switches_init();
-  spiAdc_init();
-  imu_init(&hspi2);
-  vcu_init();
+//  spiAdc_init();
+//  imu_init(&hspi2);
+//  can_init();
+//  vcu_init();
   pwm_init();
 
-  VCUStatus stat = VCUStatus();
-  TachData tachData;
+//  VCUStatus stat = VCUStatus();
+//  TachData tachData;
 
-  switches_setAccessory(1.0f);
-  switches_setRadiatorFans(true);
-  switches_setBatteryFans(true);
+  switches_setBrakeLight(0.0f);
   switches_setGLV(true);
-  switches_setShutdown(true);
+  switches_setRadiatorFans(false);
+
+  switches_setAccessory(0.0f);
+  switches_setPump(0.0f);
+  switches_setBuzzer(false);
+  switches_setBatteryFans(false);
+  switches_setShutdown(false);
+
+  pwm_regulateRadiatorFans(0.0f);
 
   // so VCU can power on
-  tach_init();
+//  tach_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  bool hardBraking = false; // TODO remove this shit
-  float brakeTimer = 0;
-  float accumulator = 0;
+//  bool hardBraking = false; // TODO remove this shit
+//  float brakeTimer = 0;
+//  float accumulator = 0;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -138,37 +136,56 @@ int main(void)
     float deltaTime = clock_getDeltaTime();
     led_rainbow(deltaTime);
 
-    if(imu_isAccelReady())
-      imu_getAccel(&accel);
-
-    tach_periodic(deltaTime, tachData);
-
-    float tau = 0.1f;
-    float alpha = deltaTime / (deltaTime + tau);
-    accumulator = (1.0f - alpha) * accumulator + alpha * accel.x;
-    hardBraking = accel.x > 8.0f || accel.x < -8.0f;
-    bool braking = accel.x > 5.0f || accel.x < -5.0f;
-    float pct = 0.5f;
-
-    if(hardBraking) {
-        bool pattern = (brakeTimer > 0.5f) || (static_cast<uint32_t>(brakeTimer / 0.05f) % 2 == 0);
-        switches_setBrakeLight(pattern * pct);
-        brakeTimer += deltaTime;
-    } else if(braking) {
-        switches_setBrakeLight(pct);
+    if(clock_getTime() < 1.0f) {
+      bool on = ((int)(clock_getTime() * 6.0f)) % 2 == 0;
+      switches_setBrakeLight(on * 0.4f);
     } else {
-        switches_setBrakeLight(0.0005f);
-        brakeTimer = 0;
+      float sineWave = 0.5f * (sin(6.28f / 2.0f * (clock_getTime() - 1.0f)) + 1.0f);
+      float pct = sineWave * 0.90f + 0.10f;
+      switches_setBrakeLight(pct * pct * 0.4f);
     }
+
+//    pwm_regulateRadiatorFans(0.99f);
+//    if(clock_getTime() < 1.0f) {
+//      switches_setRadiatorFans(false);
+//    } else {
+//      switches_setRadiatorFans(true);
+//    }
+
+//    HAL_Delay(1);
+
+//    if(imu_isAccelReady())
+//      imu_getAccel(&accel);
+
+//    tach_periodic(deltaTime, tachData);
+
+//    float tau = 0.1f;
+//    float alpha = deltaTime / (deltaTime + tau);
+//    accumulator = (1.0f - alpha) * accumulator + alpha * accel.x;
+//    hardBraking = accel.x > 8.0f || accel.x < -8.0f;
+//    bool braking = accel.x > 5.0f || accel.x < -5.0f;
+//    float pct = 0.5f;
+//
+//    if(hardBraking) {
+//        bool pattern = (brakeTimer > 0.5f) || (static_cast<uint32_t>(brakeTimer / 0.05f) % 2 == 0);
+//        switches_setBrakeLight(pattern * pct);
+//        brakeTimer += deltaTime;
+//    } else if(braking) {
+//        switches_setBrakeLight(pct);
+//    } else {
+//        switches_setBrakeLight(0.0005f);
+//        brakeTimer = 0;
+//    }
 
 
 //    spiAdc_getVoltages(adcVoltages); // TODO ADC doesn't work
-    vcu_periodic(adcVoltages, stat, tachData);
+//    vcu_periodic(adcVoltages, stat, tachData);
+//    can_periodic();
 
-    switches_setBrakeLight(stat.brakeLightPercent);
-    switches_setBuzzer(stat.buzzerType);
-    pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
-    switches_setPump(stat.pduCooling.pumpPercent);
+//    switches_setBrakeLight(stat.brakeLightPercent);
+//    switches_setBuzzer(stat.buzzerType);
+//    pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
+//    switches_setPump(stat.pduCooling.pumpPercent);
   }
   /* USER CODE END 3 */
 }
@@ -192,10 +209,11 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 1;
   RCC_OscInitStruct.PLL.PLLN = 10;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV7;

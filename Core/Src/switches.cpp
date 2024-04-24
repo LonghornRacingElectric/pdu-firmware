@@ -6,7 +6,6 @@ void switches_init() {
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-
 }
 
 void switches_setBrakeLight(float f) {
@@ -38,5 +37,5 @@ void switches_setShutdown(bool on) {
 }
 
 void switches_setBuzzer(bool on) {
-    HAL_GPIO_WritePin(RTD_Enable_GPIO_Port, RTD_Enable_Pin, (GPIO_PinState) on);
+    HAL_GPIO_WritePin(SW_RTD_GPIO_Port, SW_RTD_Pin, (GPIO_PinState) on);
 }

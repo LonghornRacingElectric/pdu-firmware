@@ -59,46 +59,16 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define SW_RadFan_Pin GPIO_PIN_13
 #define SW_RadFan_GPIO_Port GPIOC
-#define CAN_Term_Pin GPIO_PIN_14
-#define CAN_Term_GPIO_Port GPIOC
 #define LED_R_Pin GPIO_PIN_0
 #define LED_R_GPIO_Port GPIOA
 #define LED_G_Pin GPIO_PIN_1
 #define LED_G_GPIO_Port GPIOA
 #define LED_B_Pin GPIO_PIN_2
 #define LED_B_GPIO_Port GPIOA
-#define Fault_SHDN_Pin GPIO_PIN_3
-#define Fault_SHDN_GPIO_Port GPIOA
-#define Fault_GLV_Pin GPIO_PIN_4
-#define Fault_GLV_GPIO_Port GPIOA
-#define Fault_BattFan_Pin GPIO_PIN_5
-#define Fault_BattFan_GPIO_Port GPIOA
-#define Fault_RadFan_Pin GPIO_PIN_6
-#define Fault_RadFan_GPIO_Port GPIOA
-#define Fault_BrakeLight_Pin GPIO_PIN_7
-#define Fault_BrakeLight_GPIO_Port GPIOA
-#define Fault_Pump2_Pin GPIO_PIN_0
-#define Fault_Pump2_GPIO_Port GPIOB
-#define Tach_FlowRate_Pin GPIO_PIN_1
-#define Tach_FlowRate_GPIO_Port GPIOB
-#define Fault_Pump1_Pin GPIO_PIN_2
-#define Fault_Pump1_GPIO_Port GPIOB
-#define SPI_SCK_Pin GPIO_PIN_10
-#define SPI_SCK_GPIO_Port GPIOB
-#define SPI_CS_ADC_Pin GPIO_PIN_11
-#define SPI_CS_ADC_GPIO_Port GPIOB
-#define SPI_CS_IMU_Pin GPIO_PIN_12
-#define SPI_CS_IMU_GPIO_Port GPIOB
-#define SPI_CS_EEPROM_Pin GPIO_PIN_13
-#define SPI_CS_EEPROM_GPIO_Port GPIOB
-#define SPI_MISO_Pin GPIO_PIN_14
-#define SPI_MISO_GPIO_Port GPIOB
-#define SPI_MOSI_Pin GPIO_PIN_15
-#define SPI_MOSI_GPIO_Port GPIOB
-#define PWM_Pump1_Pin GPIO_PIN_8
-#define PWM_Pump1_GPIO_Port GPIOA
-#define PWM_Pump2_Pin GPIO_PIN_9
-#define PWM_Pump2_GPIO_Port GPIOA
+#define PWM_Pump_Pin GPIO_PIN_8
+#define PWM_Pump_GPIO_Port GPIOA
+#define PWM_Accessory_Pin GPIO_PIN_9
+#define PWM_Accessory_GPIO_Port GPIOA
 #define PWM_BrakeLight_Pin GPIO_PIN_10
 #define PWM_BrakeLight_GPIO_Port GPIOA
 #define PWM_RadFan_Pin GPIO_PIN_11
@@ -109,12 +79,8 @@ void Error_Handler(void);
 #define SW_GLV_GPIO_Port GPIOA
 #define SW_SHDN_Pin GPIO_PIN_4
 #define SW_SHDN_GPIO_Port GPIOB
-#define Tach_RadFan_Pin GPIO_PIN_5
-#define Tach_RadFan_GPIO_Port GPIOB
-#define RTD_Enable_Pin GPIO_PIN_6
-#define RTD_Enable_GPIO_Port GPIOB
-#define Button_Pin GPIO_PIN_7
-#define Button_GPIO_Port GPIOB
+#define SW_RTD_Pin GPIO_PIN_6
+#define SW_RTD_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

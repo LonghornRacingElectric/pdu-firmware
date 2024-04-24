@@ -87,8 +87,8 @@ void Error_Handler(void);
 #define SPI_SCK_GPIO_Port GPIOB
 #define SPI_CS_ADC_Pin GPIO_PIN_11
 #define SPI_CS_ADC_GPIO_Port GPIOB
-#define SP_CS_IMU_Pin GPIO_PIN_12
-#define SP_CS_IMU_GPIO_Port GPIOB
+#define SPI_CS_IMU_Pin GPIO_PIN_12
+#define SPI_CS_IMU_GPIO_Port GPIOB
 #define SPI_CS_EEPROM_Pin GPIO_PIN_13
 #define SPI_CS_EEPROM_GPIO_Port GPIOB
 #define SPI_MISO_Pin GPIO_PIN_14

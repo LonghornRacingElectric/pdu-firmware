@@ -57,7 +57,7 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(CAN_Term_GPIO_Port, CAN_Term_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SPI_CS_ADC_Pin|SP_CS_IMU_Pin|SPI_CS_EEPROM_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, SPI_CS_ADC_Pin|SPI_CS_IMU_Pin|SPI_CS_EEPROM_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, SW_BattFan_Pin|SW_GLV_Pin, GPIO_PIN_RESET);
@@ -87,7 +87,7 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PBPin PBPin PBPin */
-  GPIO_InitStruct.Pin = SPI_CS_ADC_Pin|SP_CS_IMU_Pin|SPI_CS_EEPROM_Pin;
+  GPIO_InitStruct.Pin = SPI_CS_ADC_Pin|SPI_CS_IMU_Pin|SPI_CS_EEPROM_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;

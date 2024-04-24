@@ -18,6 +18,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "can.h"
+#include "lptim.h"
+#include "spi.h"
 #include "tim.h"
 #include "gpio.h"
 
@@ -27,6 +30,7 @@
 #include "led.h"
 #include "switches.h"
 #include "pwm.h"
+#include "angel_can.h"
 
 #include <cmath>
 /* USER CODE END Includes */
@@ -94,13 +98,18 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_TIM1_Init();
+  MX_CAN1_Init();
+  MX_LPTIM1_Init();
+  MX_SPI2_Init();
+  MX_LPTIM2_Init();
   /* USER CODE BEGIN 2 */
+    HAL_Delay(100);
   clock_init();
   led_init();
   switches_init();
 //  spiAdc_init();
 //  imu_init(&hspi2);
-//  can_init();
+//  can_init(&hcan1);
 //  vcu_init();
   pwm_init();
 
@@ -118,6 +127,9 @@ int main(void)
   switches_setShutdown(false);
 
   pwm_regulateRadiatorFans(0.0f);
+
+  // enable pump for testing
+    switches_setPump(1.0f);
 
   // so VCU can power on
 //  tach_init();
@@ -209,11 +221,10 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 1;
   RCC_OscInitStruct.PLL.PLLN = 10;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV7;

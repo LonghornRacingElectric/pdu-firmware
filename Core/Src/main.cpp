@@ -109,7 +109,7 @@ int main(void)
   switches_init();
 //  spiAdc_init();
 //  imu_init(&hspi2);
-//  can_init(&hcan1);
+  can_init(&hcan1);
 //  vcu_init();
   pwm_init();
 
@@ -192,7 +192,7 @@ int main(void)
 
 //    spiAdc_getVoltages(adcVoltages); // TODO ADC doesn't work
 //    vcu_periodic(adcVoltages, stat, tachData);
-//    can_periodic();
+    can_periodic(deltaTime);
 
 //    switches_setBrakeLight(stat.brakeLightPercent);
 //    switches_setBuzzer(stat.buzzerType);

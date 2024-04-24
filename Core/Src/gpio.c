@@ -51,7 +51,10 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, SW_RadFan_Pin|CAN_Term_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(SW_RadFan_GPIO_Port, SW_RadFan_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(CAN_Term_GPIO_Port, CAN_Term_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, SPI_CS_ADC_Pin|SP_CS_IMU_Pin|SPI_CS_EEPROM_Pin, GPIO_PIN_SET);

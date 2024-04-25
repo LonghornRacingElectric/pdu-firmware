@@ -68,7 +68,8 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 AdcVoltages adcVoltages;
 TachData tachData;
-xyz accel;
+xyz accelData;
+xyz gyroData;
 VCUStatus stat;
 /* USER CODE END 0 */
 
@@ -151,9 +152,9 @@ int main(void)
     led_rainbow(deltaTime);
 
     if(imu_isAccelReady())
-      imu_getAccel(&accel);
-
-    volatile float x = accel.z;
+      imu_getAccel(&accelData);
+    if(imu_isGyroReady())
+      imu_getGyro(&gyroData);
 
 //    float tau = 0.1f;
 //    float alpha = deltaTime / (deltaTime + tau);
@@ -187,7 +188,7 @@ int main(void)
     }
 
     tach_periodic(deltaTime, tachData);
-    vcu_periodic(adcVoltages, stat, tachData);
+    vcu_periodic(adcVoltages, stat, tachData, accelData, gyroData);
     can_periodic(deltaTime);
 
     switches_setBrakeLight(stat.brakeLightPercent);

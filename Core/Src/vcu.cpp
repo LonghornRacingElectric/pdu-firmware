@@ -38,7 +38,7 @@ void vcu_init() {
     can_addOutbox(PDU_VCU_STATUS, 0.1f, &pduStatus);
 }
 
-void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat, TachData& tachData) {
+void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat, TachData& tachData, xyz& accelData, xyz& gyroData) {
     can_writeFloat(uint16_t, &pduCurrents1, 0, adcVoltages.dcBusCurrent, 0.01f);
     can_writeFloat(uint16_t, &pduCurrents1, 2, adcVoltages.radiatorFansCurrent, 1.0f);
     can_writeFloat(uint16_t, &pduCurrents1, 4, adcVoltages.batteryFansCurrent, 1.0f);

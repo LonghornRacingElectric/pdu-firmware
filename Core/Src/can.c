@@ -55,6 +55,34 @@ void MX_CAN1_Init(void)
   }
   /* USER CODE BEGIN CAN1_Init 2 */
 
+    CAN_FilterTypeDef sFilterConfig;
+
+//    sFilterConfig.FilterNumber = 14; //0-13: CAN1, 14-27:CAN2
+
+    sFilterConfig.FilterBank = 0;
+    sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+    sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+    sFilterConfig.FilterIdHigh = 0x110 << 5;
+    sFilterConfig.FilterIdLow = 0;
+    sFilterConfig.FilterMaskIdHigh = 0x710 << 5;
+    sFilterConfig.FilterMaskIdLow = 0;
+    sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+    sFilterConfig.FilterActivation = ENABLE;
+
+//    sFilterConfig.BankNumber = 0;
+
+
+
+    if(HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK)
+
+    {
+
+        /* Filter configuration Error */
+
+        Error_Handler();
+
+    }
+
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -123,10 +151,10 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_8|GPIO_PIN_9);
 
     /* CAN1 interrupt Deinit */
-    HAL_NVIC_DisableIRQ(CAN1_TX_IRQn);
-    HAL_NVIC_DisableIRQ(CAN1_RX0_IRQn);
-    HAL_NVIC_DisableIRQ(CAN1_RX1_IRQn);
-    HAL_NVIC_DisableIRQ(CAN1_SCE_IRQn);
+//    HAL_NVIC_DisableIRQ(CAN1_TX_IRQn);
+//    HAL_NVIC_DisableIRQ(CAN1_RX0_IRQn);
+//    HAL_NVIC_DisableIRQ(CAN1_RX1_IRQn);
+//    HAL_NVIC_DisableIRQ(CAN1_SCE_IRQn);
   /* USER CODE BEGIN CAN1_MspDeInit 1 */
 
   /* USER CODE END CAN1_MspDeInit 1 */

@@ -178,14 +178,14 @@ int main(void)
 //    spiAdc_getVoltages(adcVoltages); // TODO ADC doesn't work
 
     // TODO remove this temp shit
-    if(clock_getTime() < 1.0f) {
-      bool on = ((int)(clock_getTime() * 6.0f)) % 2 == 0;
-      stat.brakeLightPercent = (on * 0.4f);
-    } else {
-      float sineWave = 0.5f * (sin(6.28f / 2.0f * (clock_getTime() - 1.0f)) + 1.0f);
-      float pct = sineWave * 0.90f + 0.10f;
-      stat.brakeLightPercent = (pct * pct * 0.4f);
-    }
+//    if(clock_getTime() < 1.0f) {
+//      bool on = ((int)(clock_getTime() * 6.0f)) % 2 == 0;
+//      stat.brakeLightPercent = (on * 0.4f);
+//    } else {
+//      float sineWave = 0.5f * (sin(6.28f / 2.0f * (clock_getTime() - 1.0f)) + 1.0f);
+//      float pct = sineWave * 0.90f + 0.10f;
+//      stat.brakeLightPercent = (pct * pct * 0.4f);
+//    }
 
     tach_periodic(deltaTime, tachData);
     vcu_periodic(adcVoltages, stat, tachData, accelData, gyroData);

@@ -84,7 +84,7 @@ void vcu_periodic(AdcVoltages& adcVoltages, VCUStatus &stat, TachData& tachData,
     // Check VCU->PDU Inboxes
     // TODO implement
     if(pduBrakeLight.isRecent) {
-        stat.brakeLightPercent = can_readFloat(uint8_t, &pduBrakeLight, 0, 0.01f);
+        stat.brakeLightPercent = can_readFloat(uint16_t, &pduBrakeLight, 0, 0.0001f);
 
         // pulsating
 //        stat.brakeLightPercent = ((float) ((int) clock_getTime() % 5)) / 5;

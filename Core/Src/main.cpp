@@ -122,15 +122,13 @@ int main(void)
   switches_setGLV(true);
   switches_setRadiatorFans(false);
 
-  switches_setAccessory(0.0f);
+//  switches_setAccessory(0.0f);
   switches_setPump(0.0f);
   switches_setBuzzer(false);
   switches_setBatteryFans(false);
-  switches_setShutdown(false);
+  switches_setShutdown(true);
 
   pwm_regulateRadiatorFans(0.0f);
-
-//  HAL_GPIO_WritePin(CAN_Term_GPIO_Port, CAN_Term_Pin, GPIO_PIN_RESET);
 
   // do last as it takes time
   led_set(0.2f, 0.2f, 0);
@@ -140,9 +138,6 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-//  bool hardBraking = false; // TODO remove this shit
-//  float brakeTimer = 0;
-//  float accumulator = 0;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -155,37 +150,6 @@ int main(void)
       imu_getAccel(&accelData);
     if(imu_isGyroReady())
       imu_getGyro(&gyroData);
-
-//    float tau = 0.1f;
-//    float alpha = deltaTime / (deltaTime + tau);
-//    accumulator = (1.0f - alpha) * accumulator + alpha * accel.x;
-//    hardBraking = accel.x > 8.0f || accel.x < -8.0f;
-//    bool braking = accel.x > 5.0f || accel.x < -5.0f;
-//    float pct = 0.5f;
-//
-//    if(hardBraking) {
-//        bool pattern = (brakeTimer > 0.5f) || (static_cast<uint32_t>(brakeTimer / 0.05f) % 2 == 0);
-//        switches_setBrakeLight(pattern * pct);
-//        brakeTimer += deltaTime;
-//    } else if(braking) {
-//        switches_setBrakeLight(pct);
-//    } else {
-//        switches_setBrakeLight(0.0005f);
-//        brakeTimer = 0;
-//    }
-
-
-//    spiAdc_getVoltages(adcVoltages); // TODO ADC doesn't work
-
-    // TODO remove this temp shit
-//    if(clock_getTime() < 1.0f) {
-//      bool on = ((int)(clock_getTime() * 6.0f)) % 2 == 0;
-//      stat.brakeLightPercent = (on * 0.4f);
-//    } else {
-//      float sineWave = 0.5f * (sin(6.28f / 2.0f * (clock_getTime() - 1.0f)) + 1.0f);
-//      float pct = sineWave * 0.90f + 0.10f;
-//      stat.brakeLightPercent = (pct * pct * 0.4f);
-//    }
 
     tach_periodic(deltaTime, tachData);
     vcu_periodic(adcVoltages, stat, tachData, accelData, gyroData);

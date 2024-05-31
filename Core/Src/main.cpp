@@ -120,7 +120,8 @@ int main(void)
 
   switches_setBrakeLight(0.0f);
   switches_setGLV(true);
-  switches_setRadiatorFans(false);
+//  pwm_regulateRadiatorFans(0.0f);
+  switches_setRadiatorFans(true);
 
 //  switches_setAccessory(0.0f);
   switches_setPump(0.0f);
@@ -128,7 +129,6 @@ int main(void)
   switches_setBatteryFans(false);
   switches_setShutdown(true);
 
-  pwm_regulateRadiatorFans(0.0f);
 
   // do last as it takes time
   led_set(0.2f, 0.2f, 0);
@@ -157,7 +157,7 @@ int main(void)
 
     switches_setBrakeLight(stat.brakeLightPercent);
     switches_setBuzzer(stat.buzzerType);
-    pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
+//    pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
     switches_setPump(stat.pduCooling.pumpPercent);
   }
   /* USER CODE END 3 */

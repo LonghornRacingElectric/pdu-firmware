@@ -120,10 +120,10 @@ int main(void)
 
   switches_setBrakeLight(0.0f);
   switches_setGLV(true);
-//  pwm_regulateRadiatorFans(0.0f);
-  switches_setRadiatorFans(true);
+    switches_setRadiatorFans(true);
+    pwm_regulateRadiatorFans(100.0f);
 
-//  switches_setAccessory(0.0f);
+  switches_setAccessory(0.0f);
   switches_setPump(0.0f);
   switches_setBuzzer(false);
   switches_setBatteryFans(false);

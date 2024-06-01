@@ -37,6 +37,6 @@ void switches_setShutdown(bool on) {
 }
 
 void switches_setBuzzer(bool on) {
-//    HAL_GPIO_WritePin(SW_RTD_GPIO_Port, SW_RTD_Pin, (GPIO_PinState) on);
-  switches_setAccessory(on); // TODO fix harness lol
+    HAL_GPIO_WritePin(SW_RTD_GPIO_Port, SW_RTD_Pin, (GPIO_PinState) on);
+//  switches_setAccessory(on); // TODO fix harness lol
 }

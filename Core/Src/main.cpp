@@ -121,7 +121,6 @@ int main(void)
   switches_setBrakeLight(0.0f);
   switches_setGLV(true);
     switches_setRadiatorFans(true);
-    pwm_regulateRadiatorFans(100.0f);
 
   switches_setAccessory(0.0f);
   switches_setPump(0.0f);
@@ -138,6 +137,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  float pwm = 0.0f;
+  bool up = true;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -157,8 +158,20 @@ int main(void)
 
     switches_setBrakeLight(stat.brakeLightPercent);
     switches_setBuzzer(stat.buzzerType);
-//    pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
+    pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
     switches_setPump(stat.pduCooling.pumpPercent);
+
+
+//      pwm_regulateRadiatorFans(pwm);
+//      if(up){
+//          if(pwm < 0.9f){
+//             pwm += 0.00001;
+//          }else up = false;
+//      }else{
+//          if(pwm > 0.0f){
+//              pwm -= 0.00001;
+//          }else up = true;
+//      }
   }
   /* USER CODE END 3 */
 }

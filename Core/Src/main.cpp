@@ -137,8 +137,9 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  float pwm = 0.0f;
-  bool up = true;
+
+//  float pwm = 0.0f;
+//  bool up = true;
   while (1)
   {
     /* USER CODE END WHILE */

@@ -120,13 +120,13 @@ int main(void)
 
   switches_setBrakeLight(0.0f);
   switches_setGLV(true);
-  switches_setRadiatorFans(true);
+  switches_setShutdown(true);
 
   switches_setAccessory(0.0f);
   switches_setPump(0.0f);
   switches_setBuzzer(false);
   switches_setBatteryFans(false);
-  switches_setShutdown(true);
+  switches_setRadiatorFans(false);
 
 
   // do last as it takes time
@@ -159,7 +159,9 @@ int main(void)
 
     switches_setBrakeLight(stat.brakeLightPercent);
     switches_setBuzzer(stat.buzzerType);
-    pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
+//    pwm_regulateRadiatorFans(stat.pduCooling.radiatorFanPercent);
+    switches_setRadiatorFans(stat.pduCooling.radiatorFanPercent > 0.1f); // TODO temp
+    switches_setBatteryFans(stat.pduCooling.radiatorFanPercent > 0.1f); // TODO temp
     switches_setPump(stat.pduCooling.pumpPercent);
 
 
